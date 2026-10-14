@@ -1,7 +1,11 @@
 {
-  "name": "oikon48",
-  "owner": { "name": "oikon48" },
-  "metadata": { "description": "oikon48's Claude Code plugins and mods" },
+  "name": "breakersun",
+  "owner": {
+    "name": "breakersun"
+  },
+  "metadata": {
+    "description": "breakersun fork of oikon48/prompt-rail with prompt-rail-toggle until upstream PR #59 merges"
+  },
   "plugins": [
     {
       "name": "prompt-rail",
