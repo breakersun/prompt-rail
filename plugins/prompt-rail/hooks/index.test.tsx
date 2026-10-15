@@ -23,6 +23,7 @@ test('the terminal dock draws a tick per prompt, other seats draw the text, pres
   const toasts: string[] = []
   on('ui.toast', ($, e) => {
     toasts.push(e.text)
+    return { value: undefined }
   })
   // Stand in for the engine's own drawing of a prompt row.
   on('ui.render', { component: 'UserMessage' }, ($, e) => {
@@ -67,7 +68,7 @@ const drawPrompts = async ($: any, on: any) => {
   on('config.set', ($: any, e: any) => ({ value: e.value }))
   on('ui.open', () => ({ value: { isPlaced: true } }))
   on('ui.close', () => ({}))
-  on('ui.toast', () => {})
+  on('ui.toast', () => ({ value: undefined }))
   await $.ui.mount({ plugin: 'prompt-rail', surface: 'terminal', component: 'UserMessage', requestId: 'm1', props: prompt('first prompt', null) })
   await $.ui.mount({ plugin: 'prompt-rail', surface: 'terminal', component: 'UserMessage', requestId: 'm2', props: prompt('second prompt', { first: 0, last: 3, of: 4 }) })
 }
@@ -120,7 +121,7 @@ test('with no prompt on screen the text line shows the newest one and no bar is 
   on('config.set', ($: any, e: any) => ({ value: e.value }))
   on('ui.open', () => ({ value: { isPlaced: true } }))
   on('ui.close', () => ({}))
-  on('ui.toast', () => {})
+  on('ui.toast', () => ({ value: undefined }))
   await $.ui.mount({ plugin: 'prompt-rail', surface: 'terminal', component: 'UserMessage', requestId: 'm1', props: prompt('first prompt', null) })
   await $.ui.mount({ plugin: 'prompt-rail', surface: 'terminal', component: 'UserMessage', requestId: 'm2', props: prompt('second prompt', null) })
   await $.command.run({ command: 'prompt-rail', args: 'horizontal' })
@@ -1082,6 +1083,7 @@ test('/prompt-rail <mode> still switches when the setting has no /config row', a
   on('ui.close', () => ({}))
   on('ui.toast', ($: any, e: any) => {
     toasts.push(e.text)
+    return { value: undefined }
   })
   await $.ui.mount({ plugin: 'prompt-rail', surface: 'terminal', component: 'UserMessage', requestId: 'm1', props: prompt('first prompt', { first: 0, last: 1, of: 2 }) })
   const answer = await $.command.run({ command: 'prompt-rail', args: 'horizontal' })
@@ -1116,7 +1118,7 @@ test('a mode the setting cannot keep is kept for the session', async ($, on) => 
   })
   on('ui.open', () => ({ value: { isPlaced: true } }))
   on('ui.close', () => ({ value: undefined }))
-  on('ui.toast', () => {})
+  on('ui.toast', () => ({ value: undefined }))
   await $.command.run({ command: 'prompt-rail', args: 'off' })
   expect(store.get('session-mode:s1')).toBe('off')
 })
