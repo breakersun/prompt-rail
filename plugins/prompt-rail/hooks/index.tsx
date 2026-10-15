@@ -1071,7 +1071,15 @@ export const register: Register = (on, options) => {
     // The toggle, as `/prompt-rail <mode>` does it: switch at once, then write
     // the setting, whose change reloads this module in the new mode.
     if (e.command === 'prompt-rail-toggle') {
-      mode = mode === 'off' ? ((await $.store.get(LAST_ON_KEY)) as Mode | undefined) ?? 'horizontal' : 'off'
+      if (mode === 'off') {
+        const lastOn = await $.store.get(LAST_ON_KEY)
+        mode = isMode(lastOn) && lastOn !== 'off' ? lastOn : 'horizontal'
+      } else {
+        // Remembered here too: the mode may have come from /config or an
+        // earlier version, neither of which went through writeMode.
+        await $.store.set(LAST_ON_KEY, mode)
+        mode = 'off'
+      }
       await seatRail($, mode, isTerminal)
       await redrawRail($)
       await writeMode($, mode)
